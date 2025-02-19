@@ -2,16 +2,17 @@
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 import LinearProgrammingForm from './components/LinearProgrammingForm.vue'
-
+import uplaod from "@/components/uplaod.vue";
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+<!--    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />-->
 
-    <div class="wrapper">
-      <HelloWorld msg="线性规划求解器" />
-    </div>
+<!--    <div class="wrapper">-->
+<!--      <HelloWorld msg="线性规划求解器" />-->
+<!--    </div>-->
+    <uplaod></uplaod>
   </header>
 
   <main>
