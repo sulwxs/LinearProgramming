@@ -16,7 +16,7 @@
 
     <!-- 文件状态展示 -->
     <div v-if="fileList.length >=0" class="file-status-container">
-      <el-table :data="fileList" style="width: 100%">
+      <el-table v-loading="loading"  :data="fileList" style="width: 100%">
         <el-table-column prop="name" label="文件名" width="180" align="center"></el-table-column>
         <el-table-column prop="status" label="上传状态" width="150" align="center">
           <template #default="{ row }">
@@ -83,6 +83,7 @@ export default {
   },
   setup() {
     const fileList = ref([]);
+    const loading=ref(true);
     const overallProgress = ref(0);
 
 
@@ -142,6 +143,7 @@ export default {
         // 加载已有文件列表
     const loadFileList = async () => {
       try {
+        loading.value=true;
         const response = await axios.get('http://127.0.0.1:5000/getfilelist');
         console.error('加载文件列', response.data);
         if (response.data && Array.isArray(response.data)) {
@@ -156,7 +158,9 @@ export default {
       } catch (error) {
         console.error('加载文件列表失败', error);
         ElMessage.error('加载文件列表失败');
+        loading.value=false;
       }
+      loading.value=false;
     };
 
     // 在组件挂载后加载文件列表
@@ -167,6 +171,7 @@ export default {
 
     return {
       fileList,
+      loading,
       overallProgress,
       handleUploadSuccess,
       handleProgress,
