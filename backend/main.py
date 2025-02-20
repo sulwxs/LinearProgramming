@@ -14,6 +14,7 @@ CORS(app)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'txt', 'csv'}
+
 @app.route("/")
 def index():
     return "hello world"
