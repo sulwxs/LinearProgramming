@@ -1,7 +1,9 @@
 import logging
 import os
+import re
 import time
 
+import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import cross_origin, CORS
 from scipy.optimize import linprog
@@ -47,6 +49,11 @@ def solve_lp():
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def sanitize_filename(filename: str) -> str:
+    # 使用正则表达式仅保留字母、数字、下划线和连字符
+    sanitized_filename = re.sub(r'[^a-zA-Z0-9_\-\.]', '', filename)
+    return sanitized_filename
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -70,6 +77,7 @@ def get_files():
 @app.route('/delete', methods=['GET'])
 def delete_file():
     filename = request.args.get('filename', default='', type=str)
+    filename=sanitize_filename(filename)
     if filename == '':
         return jsonify({"error": "没有这个文件"}), 400
 
@@ -82,6 +90,22 @@ def delete_file():
         return jsonify({"success": "ok"}), 200
 
     return jsonify({"error": "没有这个文件"}), 400
+
+
+@app.route('/read_csv_matrix', methods=['GET'])
+def read_csv_matrix():
+    try:
+        filename = request.args.get('filename', default='', type=str)
+        filename = sanitize_filename(filename)
+        path='./uploads/' + filename
+        if not os.path.exists(path):
+            return jsonify({"error": "No such file"}), 400
+
+        df = pd.read_csv(path)
+        matrix = df.values.tolist()
+        return jsonify({"matrix": matrix}),200
+    except Exception as e:
+        return jsonify({"error": f"{filename}文件格式错误，请检查后重新上传"}), 400
 
 if __name__ == '__main__':
 
