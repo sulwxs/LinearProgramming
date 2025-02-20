@@ -1,5 +1,15 @@
 <template>
   <div>
+    <!-- 下载模板按钮 -->
+    <el-button 
+      type="primary" 
+      @click="downloadTemplate"
+      style="margin-bottom: 20px"
+    >
+      <el-icon><Download /></el-icon>
+      下载CSV模板
+    </el-button>
+
     <!-- 文件上传区域 -->
     <el-upload
       class="upload-demo"
@@ -66,6 +76,7 @@
 
 <script>
 import { ref } from 'vue';
+import { Download } from '@element-plus/icons-vue';
 import axios from 'axios';
 import { ElUpload, ElButton, ElTable, ElTableColumn, ElProgress, ElDescriptions, ElDescriptionsItem, ElMessage } from 'element-plus';
 import {CircleCheckFilled, Rank, CircleCloseFilled} from '@element-plus/icons-vue';
@@ -169,7 +180,20 @@ export default {
     // });
     loadFileList()
 
+    // 下载CSV模板
+    const downloadTemplate = () => {
+      const csvContent = "";
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'template.csv';
+      link.click();
+      URL.revokeObjectURL(link.href);
+      ElMessage.success('模板下载成功');
+    };
+
     return {
+      downloadTemplate,
       fileList,
       loading,
       overallProgress,
