@@ -12,6 +12,7 @@
       :show-file-list="false"
     >
       <el-button>选择文件</el-button>
+
     </el-upload>
 
     <!-- 文件状态展示 -->

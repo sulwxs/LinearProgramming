@@ -14,7 +14,7 @@ CORS(app)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'txt', 'csv'}
-
+matrixs={}
 @app.route("/")
 def index():
     return "hello world"
@@ -96,6 +96,7 @@ def delete_file():
 @app.route('/read_csv_matrix', methods=['GET'])
 def read_csv_matrix():
     try:
+        global matrixs
         filename = request.args.get('filename', default='', type=str)
         filename = sanitize_filename(filename)
         path='./uploads/' + filename
@@ -104,9 +105,13 @@ def read_csv_matrix():
 
         df = pd.read_csv(path)
         matrix = df.values.tolist()
+        matrixs[filename]=matrix
         return jsonify({"matrix": matrix}),200
     except Exception as e:
         return jsonify({"error": f"{filename}文件格式错误，请检查后重新上传"}), 400
+
+
+
 
 if __name__ == '__main__':
 

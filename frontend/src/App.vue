@@ -2,7 +2,9 @@
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 import LinearProgrammingForm from './components/LinearProgrammingForm.vue'
-import uplaod from "@/components/uplaod.vue";
+import uplaod from "@/components/upload.vue";
+import MatrixView from "@/components/MatrixView.vue";
+
 </script>
 
 <template>
@@ -12,7 +14,7 @@ import uplaod from "@/components/uplaod.vue";
 <!--    <div class="wrapper">-->
 <!--      <HelloWorld msg="线性规划求解器" />-->
 <!--    </div>-->
-    <uplaod></uplaod>
+    <MatrixView>></MatrixView>
   </header>
 
   <main>
