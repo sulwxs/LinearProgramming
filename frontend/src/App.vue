@@ -4,7 +4,8 @@ import TheWelcome from './components/TheWelcome.vue'
 import LinearProgrammingForm from './components/LinearProgrammingForm.vue'
 import uplaod from "@/components/upload.vue";
 import MatrixView from "@/components/MatrixView.vue";
-
+import test from "@/components/test.vue";
+import GraphDeaggble from "@/components/GraphDeaggble.vue";
 </script>
 
 <template>
@@ -14,7 +15,8 @@ import MatrixView from "@/components/MatrixView.vue";
 <!--    <div class="wrapper">-->
 <!--      <HelloWorld msg="线性规划求解器" />-->
 <!--    </div>-->
-    <MatrixView>></MatrixView>
+<!--    <MatrixView>></MatrixView>-->
+    <GraphDeaggble></GraphDeaggble>
   </header>
 
   <main>
