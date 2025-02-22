@@ -1,87 +1,145 @@
 <template>
   <div
     class="drag-container"
+    ref="root"
   >
+    <div class="header_view">
+    <slot name="header">
+    </slot>
+    </div>
     <div
-      v-for="(item, index) in elements"
-      :key="item.id"
+      v-for="(item, index) in filenames.filter(i=>i.show===true)"
+      :key="item.name"
       class="draggable-item"
-      :style="getItemStyle(item)"
-      @mousedown.stop="startDragItem($event, index)"
-    >
-      <p>{{ item.text }}</p>
-      <!-- Button to delete item -->
-      <button @click="deleteElement(item.id)">Delete</button>
+      :style="getItemStyle(item,index)"
+      >
+
+
+
+  <el-card style="max-width: 480px" >
+    <template #header >
+      <div style="cursor: move; padding: 0px">
+         <el-row  class="space-between"  @mousedown.stop="startDragItem($event, index)">
+            <el-col :span="18">{{ item.mat }}</el-col>
+            <el-col :span="2">  <el-button @click="hideElement(item)" circle :icon="Close"></el-button></el-col>
+
+        <el-col :span="2"> <el-space></el-space></el-col>
+      </el-row>
+      </div>
+
+
+    </template>
+    <div @click="clickItem(index)">
+      <el-button>打开</el-button>
+    </div>
+<!--    <img-->
+<!--      src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"-->
+<!--      style="width: 100px"-->
+<!--    />-->
+
+
+  </el-card>
+
     </div>
     <!-- Button to add a new item -->
-    <button @click="addElement">Add Element</button>
+<!--    <el-button @click="addElement">Add Element</el-button>-->
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      elements: [
+<script setup>
+import {ref} from 'vue';
+
+import {
+Close
+} from '@element-plus/icons-vue'
+
+const props=defineProps({
+filenames:Array
+})
+const emits=defineEmits(['item_click'])
+// export default {
+//   props:{
+//     data
+//   },
+  // computed: {
+  //   Close() {
+  //     return Close
+  //   }
+  // },
+  // data() {
+  //   return {
+      const testelements=ref([
         { id: 1, text: '元素 1', top: 100, left: 100 },
         { id: 2, text: '元素 2', top: 200, left: 200 },
         { id: 3, text: '元素 3', top: 300, left: 300 }
-      ],
-      dragging: false,
-      currentElementIndex: null,
-      offsetX: 0,
-      offsetY: 0,
-      containerOffsetX: 0,
-      containerOffsetY: 0,
-      isDraggingContainer: false
-    };
-  },
-  methods: {
-    getItemStyle(item) {
-      return {
+      ]);
+      const dragging=ref(false);
+      const currentElementIndex=ref(-1);
+      const offsetX=ref(0);
+      const offsetY=ref(0);
+      const containerOffsetX=ref(0);
+      const containerOffsetY=ref(0);
+      const isDraggingContainer=ref(false);
+      const root= ref(null);
+  //   };
+  // },
+  // methods: {
+    const getItemStyle=(item,index)=> {
+      if(!item.hasOwnProperty('top')){
+            let num_row=Math.floor(index/3)
+      let num_col=index%3
+        item.top=100+num_row*200
+        position: 'absolute'
+        item.left=100+num_col*250
+      }
+               return {
         position: 'absolute',
         top: `${item.top}px`,
         left: `${item.left}px`,
-        cursor: this.dragging ? 'grabbing' : 'grab'
       };
-    },
+    };
+    const getCursor=()=>
+    {
+      return{cursor: dragging.value ? 'grabbing' : 'grab'};
+    };
 
     // Start dragging a specific item
-    startDragItem(event, index) {
-      this.dragging = true;
-      this.currentElementIndex = index;
-      const element = this.elements[index];
-      this.offsetX = event.clientX - element.left;
-      this.offsetY = event.clientY - element.top;
+    const startDragItem=(event, index)=> {
+      dragging.value = true;
+      currentElementIndex.value = index;
+      const element = props.filenames[index];
+      offsetX.value = event.clientX - element.left;
+      offsetY.value = event.clientY - element.top;
 
       // Add global event listeners for mousemove and mouseup
-      window.addEventListener('mousemove', this.dragMove);
-      window.addEventListener('mouseup', this.endDrag);
-      window.addEventListener('mouseleave', this.endDrag); // for mouse leaving the viewport
-    },
+      window.addEventListener('mousemove', dragMove);
+      window.addEventListener('mouseup', endDrag);
+      window.addEventListener('mouseleave', endDrag); // for mouse leaving the viewport
+    };
 
     // Start dragging the container (empty space)
-    startDragContainer(event) {
-      this.isDraggingContainer = true;
-      this.containerOffsetX = event.clientX - this.containerOffsetX;
-      this.containerOffsetY = event.clientY - this.containerOffsetY;
+    const startDragContainer=(event)=> {
+      isDraggingContainer.value = true;
+      containerOffsetX.value = event.clientX - containerOffsetX;
+      containerOffsetY.value = event.clientY - containerOffsetY;
 
       // Add global event listeners for mousemove and mouseup
-      window.addEventListener('mousemove', this.dragMove);
-      window.addEventListener('mouseup', this.endDrag);
-      window.addEventListener('mouseleave', this.endDrag); // for mouse leaving the viewport
-    },
+      window.addEventListener('mousemove', dragMove);
+      window.addEventListener('mouseup', endDrag);
+      window.addEventListener('mouseleave', endDrag); // for mouse leaving the viewport
+    };
 
     // During drag, update the element or container position
-    dragMove(event) {
-      if (this.dragging && this.currentElementIndex !== null) {
+    const dragMove=(event)=> {
+      if (dragging.value && currentElementIndex.value !== -1) {
         // Dragging an element
-        const element = this.elements[this.currentElementIndex];
-        element.left = event.clientX - this.offsetX;
-        element.top = event.clientY - this.offsetY;
+        const element = props.filenames[currentElementIndex.value];
+        element.left = event.clientX - offsetX.value;
+        element.top = event.clientY - offsetY.value;
 
         // Constrain the draggable item within the parent bounds
-        const parentRect = this.$el.getBoundingClientRect();
+        // const parentRect = $el.getBoundingClientRect();
+        const parentRect = root.value.getBoundingClientRect();
         const minX = 0;
         const minY = 0;
         const maxX = parentRect.width - 100; // item width
@@ -89,89 +147,107 @@ export default {
 
         element.left = Math.max(minX, Math.min(element.left, maxX));
         element.top = Math.max(minY, Math.min(element.top, maxY));
-      } else if (this.isDraggingContainer) {
+      } else if (isDraggingContainer.value) {
         // Dragging the entire container
-        const container = this.$el;
+        const container = root.value;
         const parentRect = container.getBoundingClientRect();
-        this.containerOffsetX = event.clientX - this.containerOffsetX;
-        this.containerOffsetY = event.clientY - this.containerOffsetY;
+        containerOffsetX.value = event.clientX - containerOffsetX.value;
+        containerOffsetY.value = event.clientY - containerOffsetY.value;
 
         const minX = 0;
         const minY = 0;
         const maxX = window.innerWidth - parentRect.width;
         const maxY = window.innerHeight - parentRect.height;
 
-        this.containerOffsetX = Math.max(minX, Math.min(this.containerOffsetX, maxX));
-        this.containerOffsetY = Math.max(minY, Math.min(this.containerOffsetY, maxY));
+        containerOffsetX.value = Math.max(minX, Math.min(containerOffsetX.value, maxX));
+        containerOffsetY.value = Math.max(minY, Math.min(containerOffsetY.value, maxY));
 
-        container.style.left = this.containerOffsetX + 'px';
-        container.style.top = this.containerOffsetY + 'px';
+        container.style.left =containerOffsetX.value + 'px';
+        container.style.top = containerOffsetY.value + 'px';
       }
-    },
+    };
 
     // End the drag action
-    endDrag() {
-      if (this.dragging) {
-        this.dragging = false;
-        this.currentElementIndex = null;
+    const endDrag=()=> {
+      if (dragging.value) {
+        dragging.value= false;
+        currentElementIndex.value = -1;
       }
 
-      if (this.isDraggingContainer) {
-        this.isDraggingContainer = false;
+      if (isDraggingContainer.value) {
+        isDraggingContainer.value = false;
       }
 
       // Remove global event listeners after drag ends
-      window.removeEventListener('mousemove', this.dragMove);
-      window.removeEventListener('mouseup', this.endDrag);
-      window.removeEventListener('mouseleave', this.endDrag);
-    },
+      window.removeEventListener('mousemove', dragMove);
+      window.removeEventListener('mouseup', endDrag);
+      window.removeEventListener('mouseleave', endDrag);
+    };
 
     // Method to add a new element
-    addElement() {
+    const addElement=()=> {
       const newElement = {
-        id: this.elements.length + 1, // Unique ID for the new element
-        text: `元素 ${this.elements.length + 1}`,
+        id: elements.value.length + 1, // Unique ID for the new element
+        text: `元素 ${elements.value.length + 1}`,
         top: 50, // Default position
         left: 50
       };
-      this.elements.push(newElement);
-    },
+      elements.value.push(newElement);
+    };
 
     // Method to delete an element
-    deleteElement(id) {
-      this.elements = this.elements.filter(item => item.id !== id);
-    }
-  }
-};
+    const hideElement=(item)=> {
+      item.show=false;
+    };
+
+    const clickItem=(id)=>
+    {
+      const ell=props.filenames[id];
+      emits("item_click",ell);
+      console.log(dragging.value);
+    };
+  // }
+// };
 </script>
 
 <style scoped>
 .drag-container {
   position: relative;
-  width: 100%;
-  height: 500px;
+  //width: 100%;
+  min-width: 500px;
+  min-height: 500px;
+  height: 100%;
   border: 1px solid #ccc;
   background-color: #f0f0f0;
   overflow: hidden;
-  cursor: grab;
+
 }
 
 .draggable-item {
-  width: 100px;
-  height: 100px;
-  background-color: rgba(0, 150, 255, 0.7);
-  color: white;
-  text-align: center;
-  line-height: 100px;
-  border-radius: 8px;
-  position: absolute;
-  cursor: grab;
+  //width: 100px;
+  //height: 100px;
+  //background-color: rgba(0, 150, 255, 0.7);
+  //color: white;
+  //text-align: center;
+  //line-height: 100px;
+  //border-radius: 8px;
+  //position: absolute;
+  //cursor: grab;
 }
 
 .draggable-item:active {
-  cursor: grabbing;
+  //cursor: grabbing;
 }
-
+.header_view
+{
+  position: absolute;
+          top: 0px;
+        left: 0px;
+  width: 100%;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 10;
+}
 * {
   -webkit-user-select: none;
   -moz-user-select: none;

@@ -72,7 +72,7 @@ def upload_file():
 
 @app.route('/getfilelist', methods=['GET'])
 def get_files():
-    return jsonify( [{"name": file, "status": "成功", "progress": 100 } for file in os.listdir(app.config['UPLOAD_FOLDER'])]),200
+    return jsonify( [{"name": file,"show":True,"read":False, "status": "success", "progress": 100 } for file in os.listdir(app.config['UPLOAD_FOLDER'])]),200
     # return jsonify({"error": "error"}), 400
 
 @app.route('/delete', methods=['GET'])
