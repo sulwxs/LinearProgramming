@@ -45,9 +45,9 @@
             v-for="item in editableTabs"
             :key="item.name"
             :label="item.name"
-            :name="item.name"
-        >
-          {{ item.show }}
+            :name="item.name">
+            <ExcelTable :matData="fileLists.find(i=>i.name===item.name).mat"></ExcelTable>
+
         </el-tab-pane>
       </el-tabs>
     </el-tab-pane>
@@ -62,11 +62,12 @@
 <script setup>
 import {ref} from 'vue';
 import upload from "@/components/upload.vue";
-import ExcelTable from "@/components/ExcelTable.vue";
+import MatrixTable from "@/components/MatrixTable.vue";
 import GraphDeaggble from "@/components/GraphDeaggble.vue";
 import {Select} from '@element-plus/icons-vue';
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import ExcelTable from "@/components/ExcelTable.vue";
 // import type { TabPaneName } from 'element-plus';
 // export default {
 //   components: {ExcelTable, upload, GraphDeaggble},
@@ -145,8 +146,6 @@ const handleFileUpload=(file)=>
 const openTab=(file)=>
 {
   if(file.hasOwnProperty('hasopen')&&file.hasopen){
-
-
 
   }
   else {

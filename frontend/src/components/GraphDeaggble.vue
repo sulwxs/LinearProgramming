@@ -16,26 +16,24 @@
 
 
 
-  <el-card style="max-width: 480px" >
+  <el-card style="width: 200px;height: 270px" >
     <template #header >
       <div style="cursor: move; padding: 0px">
          <el-row  class="space-between"  @mousedown.stop="startDragItem($event, index)">
-            <el-col :span="18">{{ item.mat }}</el-col>
-            <el-col :span="2">  <el-button @click="hideElement(item)" circle :icon="Close"></el-button></el-col>
-
+            <el-col :span="14">{{item.name}}</el-col>
+           <el-col :span="6">  <el-button @click="clickItem(index)" circle :icon="Expand"></el-button></el-col>
+            <el-col :span="4">  <el-button @click="hideElement(item)" circle :icon="Hide"></el-button></el-col>
         <el-col :span="2"> <el-space></el-space></el-col>
       </el-row>
       </div>
-
-
     </template>
-    <div @click="clickItem(index)">
-      <el-button>打开</el-button>
-    </div>
-<!--    <img-->
-<!--      src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"-->
-<!--      style="width: 100px"-->
-<!--    />-->
+
+      <div v-if="item.read" v-katex="renderMatrix(item.mat)">
+      </div>
+
+
+
+
 
 
   </el-card>
@@ -50,7 +48,7 @@
 import {ref} from 'vue';
 
 import {
-Close
+Expand,Hide
 } from '@element-plus/icons-vue'
 
 const props=defineProps({
@@ -81,16 +79,73 @@ const emits=defineEmits(['item_click'])
       const containerOffsetY=ref(0);
       const isDraggingContainer=ref(false);
       const root= ref(null);
+
+
   //   };
   // },
   // methods: {
+
+
+import katex from 'katex'
+
+
+// Example matrix data
+
+
+
+const matrixToLatex = (matrix) => {
+  const maxRows = 4;
+  const maxCols = 4;
+
+  const rowCount = matrix.length;
+  const colCount = matrix[0].length;
+if(rowCount<=4&&colCount<=4)
+{
+  return arraytoMat(matrix)
+}
+  let truncatedMatrix = matrix.slice(0, 2); // Take first 2 rows
+
+  if (rowCount > maxRows) {
+    truncatedMatrix.push(new Array(colCount).fill('...')); // Add the ellipsis row
+  }
+  if(rowCount>4){
+  truncatedMatrix = truncatedMatrix.concat(matrix.slice(rowCount - 1));
+}
+  else{
+  truncatedMatrix = truncatedMatrix.concat(matrix.slice(2,rowCount));
+  }
+  truncatedMatrix = truncatedMatrix.map(row => {
+    if (colCount > maxCols) {
+      return row.slice(0, 2).concat(["..."]).concat(row.slice(colCount - 1));
+    }
+    return row;
+  });
+  return arraytoMat(truncatedMatrix)
+
+}
+const arraytoMat=(arr)=>
+{
+    let latexString = '\\begin{pmatrix}';
+    arr.forEach(row => {
+    latexString += row.join(' & ') + '\\\\';
+  });
+  latexString += '\\end{pmatrix}';
+
+  return latexString;
+}
+const renderMatrix = (matrix) => {
+  const latexFormula = matrixToLatex(matrix);
+  return latexFormula;
+}
+
+
     const getItemStyle=(item,index)=> {
       if(!item.hasOwnProperty('top')){
             let num_row=Math.floor(index/3)
       let num_col=index%3
-        item.top=100+num_row*200
+        item.top=50+num_row*280
         position: 'absolute'
-        item.left=100+num_col*250
+        item.left=30+num_col*210
       }
                return {
         position: 'absolute',

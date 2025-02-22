@@ -1,14 +1,19 @@
 <template>
-  <div>
-    <el-button type="primary" :icon="Edit" />
-    <el-button type="primary" :icon="Share" />
-    <el-button type="primary" :icon="Delete" />
-    <el-button type="primary" :icon="Search">Search</el-button>
-    <el-button type="primary">
-      Upload<el-icon class="el-icon--right"><Upload /></el-icon>
-    </el-button>
-  </div>
+  <el-card style="max-width: 480px">
+    <div>
+    <ExcelTable>
+
+    </ExcelTable>
+    </div>
+  </el-card>
 </template>
+
 <script setup>
-import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
+import ExcelTable from "@/components/ExcelTable.vue";
+
+
 </script>
+
+<style scoped>
+
+</style>
