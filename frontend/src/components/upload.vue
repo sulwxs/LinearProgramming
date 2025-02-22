@@ -137,12 +137,19 @@ import {CircleCheckFilled, Rank, CircleCloseFilled} from '@element-plus/icons-vu
       if (!isAllowedType) {
         ElMessage.error('只能上传 .txt, .csv 或 .mat 文件');
       }
-            const newFile = {
+      let f=fileList.value.find(i=>i.name===file.name)
+      if(f===undefined)
+      {  const newFile = {
         name: file.name,
         status: 'uploading',
         progress: 0,
       };
-      fileList.value.push(newFile);
+      fileList.value.push(newFile);}
+      else {
+              f.status= 'uploading'
+        f.progress= 0
+        f.read=false
+      }
       return isAllowedType;
     };
 

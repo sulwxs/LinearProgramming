@@ -133,8 +133,13 @@ const handleDeleteFile=(filename)=>
 }
 const handleFileUpload=(file)=>
 {
-  const nf={name:file.name,status:"success",progress:100,read:false,show:false,open:false}
-fileLists.value.push(nf)
+  let f=fileLists.value.find(i=>i.name===file.name)
+  if(f===undefined){
+    const nf={name:file.name,status:"success",progress:100,read:false,show:false,open:false}
+    fileLists.value.push(nf)}
+  else {
+    readFile(file.name)
+  }
   console.log(fileLists)
 }
 const openTab=(file)=>
