@@ -28,9 +28,9 @@
       </div>
     </template>
 <el-row>
-    <div v-if="item.read" v-katex="renderMatrix(item.mat)" style="text-align: center"> </div>
+    <div v-if="item.read" v-katex="renderMatrix(item.mat)" style="text-align: center;width: 100%;"> </div>
       <el-divider/>
-        <el-text type="info">维度： {{item.mat.length}}x{{item.mat[0].length}}</el-text>
+        <el-text v-if="item.read"  type="info">维度: {{item.mat.length}}x{{item.mat[0].length}}</el-text>
 
 
 

@@ -93,7 +93,25 @@
               <el-row>
 
       <div v-if="numRows > 0">
-
+                <table>
+                  <thead>
+                  <tr>
+                    <th v-for="colIndex in numCoefficients" :key="'col-' + colIndex">x{{ colIndex }}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr v-for="(row, rowIndex) in numRows" :key="'row-' + rowIndex">
+                    <td v-for="colIndex in numCoefficients" :key="'input-' + rowIndex + '-' + colIndex">
+                      <el-input
+                          type="number"
+                          v-model="matrixA[rowIndex][colIndex - 1]"
+                          :placeholder="'a' + (rowIndex + 1) + (colIndex)"
+                          style="width: 100px;"
+                      />
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
               </el-row>
 
