@@ -20,12 +20,12 @@
     <!-- 文件状态展示 -->
     <div v-if="fileList.length >=0" class="file-status-container">
       <el-table v-loading="loading"  :data="fileList" style="width: 100%">
-        <el-table-column prop="name" label="文件名" width="180" align="center">
+        <el-table-column prop="name" label="文件名" align="center">
           <template #default="{ row }">
             {{row.name}}
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="上传状态" width="150" align="center">
+        <el-table-column prop="status" label="上传状态" align="center">
           <template #default="{ row }">
             <el-progress
               v-if="row.status === 'uploading'"
@@ -43,7 +43,7 @@
 
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" align="center">
+        <el-table-column label="操作"  align="center">
           <template #default="{ row }">
             <el-button
               @click="deleteFile(row.name)"

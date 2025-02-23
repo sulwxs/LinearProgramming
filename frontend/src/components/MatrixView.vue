@@ -14,7 +14,7 @@
                      label="全部矩阵"
                      name="overview">
 
-          <GraphDeaggble :filenames="fileLists" @item_click="openTab">
+          <GraphDeaggble style="height: 80vh" :filenames="fileLists" @item_click="openTab">
             <template #header>
               <el-row style="height: 100%;padding: 0 8px 0 8px;" type="flex" justify="start" align="middle">
                 <el-popover :visible="show_selected_table" placement="bottom" :width="320">

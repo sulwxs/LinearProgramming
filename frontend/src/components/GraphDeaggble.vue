@@ -16,21 +16,26 @@
 
 
 
-  <el-card style="width: 200px;height: 270px" >
+  <el-card style="width: 260px;height: 270px" >
     <template #header >
       <div style="cursor: move; padding: 0px">
          <el-row  class="space-between"  @mousedown.stop="startDragItem($event, index)">
-            <el-col :span="14">{{item.name}}</el-col>
-           <el-col :span="6">  <el-button @click="clickItem(index)" circle :icon="Expand"></el-button></el-col>
+           <el-col :span="16" ><el-text truncated>{{item.name}}</el-text></el-col>
+           <el-col :span="4">  <el-button @click="clickItem(index)" circle :icon="Expand"></el-button></el-col>
             <el-col :span="4">  <el-button @click="hideElement(item)" circle :icon="Hide"></el-button></el-col>
         <el-col :span="2"> <el-space></el-space></el-col>
       </el-row>
       </div>
     </template>
+<el-row>
+    <div v-if="item.read" v-katex="renderMatrix(item.mat)" style="text-align: center"> </div>
+      <el-divider/>
+        <el-text type="info">维度： {{item.mat.length}}x{{item.mat[0].length}}</el-text>
 
-      <div v-if="item.read" v-katex="renderMatrix(item.mat)">
-      </div>
 
+
+
+</el-row>
 
 
 
@@ -138,14 +143,13 @@ const renderMatrix = (matrix) => {
   return latexFormula;
 }
 
-
     const getItemStyle=(item,index)=> {
       if(!item.hasOwnProperty('top')){
             let num_row=Math.floor(index/3)
       let num_col=index%3
         item.top=50+num_row*280
         position: 'absolute'
-        item.left=30+num_col*210
+        item.left=30+num_col*300
       }
                return {
         position: 'absolute',
