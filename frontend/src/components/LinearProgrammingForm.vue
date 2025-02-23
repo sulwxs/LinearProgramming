@@ -23,19 +23,19 @@
         <div>
           <el-col>
             <p :span="12" class="text item">目标函数系数</p>
-            <el-select :span="12" v-model="matC" value-key="name" @change="step=Math.max(1,step)">
+            <el-select :span="12" placeholder="选择目标函数系数c" v-model="matC" value-key="name" @change="step=Math.max(1,step)">
               <el-option v-for="f in fileLists"
                          :key="f.name"
                          :label="f.name"
                          :value="f"/>
             </el-select>
-            <el-select :span="12" v-model="matA" value-key="name" @change="step=Math.max(2,step)">
+            <el-select :span="12" placeholder="约束条件矩阵A" v-model="matA" value-key="name" @change="step=Math.max(2,step)">
               <el-option v-for="f in fileLists"
                          :key="f.name"
                          :label="f.name"
                          :value="f"/>
             </el-select>
-            <el-select :span="12" v-model="matB" value-key="name" @change="step=Math.max(3,step)">
+            <el-select :span="12" placeholder="输入约束常数b" v-model="matB" value-key="name" @change="step=Math.max(3,step)">
               <el-option v-for="f in fileLists"
                          :key="f.name"
                          :label="f.name"
