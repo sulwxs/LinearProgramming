@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref,defineEmits,defineProps} from 'vue';
 import upload from "@/components/upload.vue";
 import MatrixTable from "@/components/MatrixTable.vue";
 import GraphDeaggble from "@/components/GraphDeaggble.vue";
@@ -72,6 +72,8 @@ import ExcelTable from "@/components/ExcelTable.vue";
 // export default {
 //   components: {ExcelTable, upload, GraphDeaggble},
 //   setup() {
+const  emits=defineEmits(['filelistchange'])
+// const props=defineProps({fileLists:Array,})
 const name = ref('app');
 const show_selected_table = ref(false);
 const show_file_list = ref([])
@@ -85,6 +87,7 @@ const handleChange = async () => {
 {
         if(!item.read){
           await readFile(item.name)
+           emits('filelistchange',fileLists.value)
         }
       }
 
@@ -98,6 +101,7 @@ const loadallMatx = async () => {
         await readFile(file.name);
       }
     }
+     emits('filelistchange',fileLists.value)
   } catch (error) {
     console.log(error)
   }
@@ -127,10 +131,12 @@ const loadFileNames = (files) => {
   fileLists.value = files;
 
   loadallMatx();
+
 };
 const handleDeleteFile=(filename)=>
 {
   fileLists.value=fileLists.value.filter(f=>f.name!==filename)
+   emits('filelistchange',fileLists.value)
 }
 const handleFileUpload=(file)=>
 {
@@ -141,7 +147,7 @@ const handleFileUpload=(file)=>
   else {
     readFile(file.name)
   }
-  console.log(fileLists)
+ emits('filelistchange',fileLists.value)
 }
 const openTab=(file)=>
 {
