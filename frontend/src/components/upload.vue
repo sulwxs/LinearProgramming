@@ -1,21 +1,33 @@
 <template>
   <div>
-    <!-- 文件上传区域 -->
+    <el-row >
+      <!-- 文件上传区域 -->
     <el-upload
       class="upload-demo"
       action="http://127.0.0.1:5000/upload"
       :on-success="handleUploadSuccess"
       :on-progress="handleProgress"
       :before-upload="beforeUpload"
-
-
       multiple
       :show-file-list="false"
     >
 <!--      :file-list="fileList"-->
-      <el-button>选择文件</el-button>
+      <el-button type="primary">选择文件</el-button>
 
     </el-upload>
+      <div style="width: 10px"></div>
+              <el-button
+      type="primary"
+      @click="downloadTemplate"
+      style="margin-bottom: 20px"
+    >
+      <el-icon><Download /></el-icon>
+      下载CSV模板
+    </el-button>
+
+
+    </el-row>
+
 
     <!-- 文件状态展示 -->
     <div v-if="fileList.length >=0" class="file-status-container">
@@ -193,7 +205,16 @@ import {CircleCheckFilled, Rank, CircleCloseFilled} from '@element-plus/icons-vu
       }
       loading.value=false;
     };
-
+    const downloadTemplate = () => {
+      const csvContent = "1,2,3\n4,5,6\n7,8,9";
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'template.csv';
+      link.click();
+      URL.revokeObjectURL(link.href);
+      ElMessage.success('模板下载成功');
+    };
     // 在组件挂载后加载文件列表
     // onMounted(() => {
     //
