@@ -1,9 +1,10 @@
 <template>
+  <el-text>{{dat}}</el-text>
   <div ref="container"></div>
 </template>
 
 <script setup>
-import {onMounted, onBeforeUnmount, ref,reactive, toRaw} from 'vue'
+import {onMounted, onBeforeUnmount, ref,reactive, toRawm} from 'vue'
 
 import {createUniver, defaultTheme, LocaleType, merge} from '@univerjs/presets';
 import {UniverSheetsCorePreset} from '@univerjs/presets/preset-sheets-core';
@@ -12,21 +13,28 @@ import {Univer} from "@univerjs/presets";
 import '@univerjs/presets/lib/styles/preset-sheets-core.css';
 import {Worksheet} from "@univerjs/presets";
 
+import {ref,defineProps,defineEmits} from 'vue';
+const props=defineProps({file:Object})
+const emits=defineEmits(['data_change','close_sheet'])
+
 const container = ref < HTMLElement | null > (null);
 let univerAPIRef = reactive < Univer | null > (null);
-const dat=ref({
+const workbook=ref({
   id: 'workbook1',
   sheetOrder: ['sheet-01'],
   sheets: {
     'sheet-01': {
-      id: 'sheet-01',
-      name: 'Sheet 01',
-      rowCount: 10,
-      columnCount: 5,
-      cellData: { 0: { 0: { f: '=\'[workbook2]Sheet 01\'!A1' } } },
+      id: file.name,
+      name: file.name,
+      rowCount: file.mat.length,
+      columnCount: file.mat[0].length,
+      cellData: {0: {0:{v:1},1:{v:2}},1:{0: {v:1},1:{v:2}}
+      }
+      //{ 0: { 0: { f: '=\'[workbook2]Sheet 01\'!A1' },1:{v:'a'}, } },
     },
   },
 })
+
 onMounted(() => {
   const {univerAPI:univerAPI} = createUniver({
     locale: LocaleType.ZH_CN,
@@ -53,4 +61,20 @@ onBeforeUnmount(() => {
   toRaw(univerRef.value)?.dispose();
   univerAPIRef = null;
 });
+
+const csvtoWorkBook=(file)=>{
+
+  for(let row of file.mat)
+  {
+
+  }
+}
+const workBooktoCSV=(workbook)=>{
+
+  for(let row of file.mat)
+  {
+
+  }
+}
+
 </script>
