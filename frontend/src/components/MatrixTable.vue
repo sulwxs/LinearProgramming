@@ -1,5 +1,5 @@
 <template>
-  <el-text>{{dat}}</el-text>
+
   <div ref="container"></div>
 </template>
 
