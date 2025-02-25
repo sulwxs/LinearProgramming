@@ -16,12 +16,12 @@ const handlefileLists=(filelist)=>
 <template>
   <el-container style="width: 90vmax">
     <el-aside style="width: 50vmax">
-<!--      <MatrixView @filelistchange="handlefileLists"></MatrixView>-->
-      <MatrixTable></MatrixTable>
+      <MatrixView @filelistchange="handlefileLists"></MatrixView>
+<!--      <MatrixTable></MatrixTable>-->
     </el-aside>
 
   <el-main style="width: 50vmax">
-<!--    <LinearProgrammingForm :file-lists="fileLists"/>-->
+    <LinearProgrammingForm :file-lists="fileLists"/>
   </el-main>
   </el-container>
 <!--  <header>-->

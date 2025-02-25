@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import {onMounted, onBeforeUnmount, ref,reactive, toRawm} from 'vue'
+import {onMounted, onBeforeUnmount,reactive, toRaw} from 'vue'
 
 import {createUniver, defaultTheme, LocaleType, merge} from '@univerjs/presets';
 import {UniverSheetsCorePreset} from '@univerjs/presets/preset-sheets-core';
