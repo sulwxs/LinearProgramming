@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@univerjs/presets": "^0.6.1"
+  }
+}
