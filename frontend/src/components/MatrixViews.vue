@@ -12,7 +12,7 @@
                      label="全部矩阵"
                      name="overview">
 
-          <GraphDeaggble style="height:80vh" :filenames="fileLists" @item_click="openTab">
+          <GraphList style="height:80vh" :filenames="fileLists" @item_click="openTab">
             <template #header>
               <el-row style="height: 100%;padding: 0 8px 0 8px;" type="flex" justify="start" align="middle">
                 <el-popover :visible="show_selected_table" placement="bottom" :width="320">
@@ -36,7 +36,7 @@
                 </el-popover>
               </el-row>
             </template>
-          </GraphDeaggble>
+          </GraphList>
 
         </el-tab-pane>
         <el-tab-pane
@@ -56,7 +56,8 @@
 import {ref,defineEmits,defineProps} from 'vue';
 import upload from "@/components/upload.vue";
 import MatrixTable from "@/components/MatrixTable.vue";
-import GraphDeaggble from "@/components/GraphDeaggble.vue";
+// import GraphDeaggble from "@/components/GraphDeaggble.vue";
+import GraphList from "@/components/GraphList.vue";
 import {Select} from '@element-plus/icons-vue';
 import axios from "axios";
 import {ElMessage} from "element-plus";
@@ -144,5 +145,10 @@ const removeTab = (currentTab) => {
   color: #6b778c;
   font-size: 32px;
   font-weight: 600;
+
+}
+.demo-tabs{
+  width: 100%;
+  height: 100%;
 }
 </style>
