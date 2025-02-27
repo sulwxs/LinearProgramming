@@ -7,14 +7,83 @@ import test from "@/components/test.vue";
 import MatrixTable from "@/components/MatrixTable.vue";
 import {CirclePlus, Document, Files, Grid, Setting, Star, UploadFilled} from "@element-plus/icons-vue";
 import IconDocumentation from "@/components/icons/IconDocumentation.vue";
+import router from "../router/router";
+import axios from "axios";
+import {ElMessage} from "element-plus";
 const fileLists=ref([]);
 const handlefileLists=(filelist)=>
 {
   fileLists.value=filelist
 }
+const handleOpen = (key, keyPath)=>
+{
+  console.log(key)
+
+// router.path='/upload'
+}
+const handleClose = (key, keyPath)=>
+{
+
+}
 const show_left_menu=ref(true)
 const isCollapse=ref(true)
 
+const loadFileNames = (files) => {
+  fileLists.value = files;
+  loadallMatx();
+
+};
+const handleDeleteFile=(filename)=>
+{
+  fileLists.value=fileLists.value.filter(f=>f.name!==filename)
+   // emits('filelistchange',fileLists.value)
+}
+const handleFileUpload=(file)=>
+{
+  let f=fileLists.value.find(i=>i.name===file.name)
+  if(f===undefined){
+    const nf={name:file.name,status:"success",progress:100,read:false,show:false,open:false}
+    fileLists.value.push(nf)}
+  else {
+    readFile(file.name)
+  }
+ // emits('filelistchange',fileLists.value)
+}
+const readFile = async (filename) => {
+  // loading.value = true;
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/read_csv_matrix?filename=${filename}`);
+    if (response.data.matrix) {
+      var a = fileLists.value.find(item => item.name === filename);
+      a.mat = response.data.matrix;
+      a.read = true;
+    } else {
+      ElMessage.error('读取失败');
+      a.read=false;
+    }
+  } catch (error) {
+    console.error('读取文件时发生错误', error);
+    ElMessage.error('读取失败');
+      a.read=false;
+
+  }
+  // loading.value = false;
+};
+const loadallMatx = async () => {
+  // loading.value = true;
+  try {
+
+    for (let file of fileLists.value) {
+      if (file.read === false) {
+        await readFile(file.name);
+      }
+    }
+     // emits('filelistchange',fileLists.value)
+  } catch (error) {
+    console.log(error)
+  }
+  // loading.value = false;
+};
 </script>
 
 <template>
@@ -24,32 +93,32 @@ const isCollapse=ref(true)
       <el-image style="width: 100%;height: 50px"></el-image>
       <div>
         <el-scrollbar>
-        <el-menu  >
-          <el-menu-item index="1">
+        <el-menu  :router="true" :unique-opened="true" default-active="solver">
+          <el-menu-item index="solver">
             <template #title>
               <el-icon><circle-plus/></el-icon>问题求解
             </template>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="matrixview">
             <template #title>
               <el-icon><grid/></el-icon>矩阵数据
             </template>
           </el-menu-item>
-          <el-sub-menu index="3">
+          <el-menu-item index="fileManage" >
             <template #title>
               <el-icon><upload/></el-icon>文件管理
             </template>
-          </el-sub-menu>
-          <el-sub-menu index="4">
+          </el-menu-item>
+          <el-menu-item index="history">
             <template #title>
               <el-icon><files/></el-icon>历史记录
             </template>
-          <el-menu-item >问题1</el-menu-item>
-          <el-menu-item >问题2</el-menu-item>
-          <el-menu-item >问题3</el-menu-item>
-          <el-menu-item >问题4</el-menu-item>
-          </el-sub-menu>
-          <el-menu-item  index="5" class="menu_setting">
+<!--          <el-menu-item route="upload" index="upload">问题1</el-menu-item>-->
+<!--          <el-menu-item >问题2</el-menu-item>-->
+<!--          <el-menu-item >问题3</el-menu-item>-->
+<!--          <el-menu-item >问题4</el-menu-item>-->
+          </el-menu-item>
+          <el-menu-item  index="setting" class="menu_setting">
                       <template #title>
               <el-icon><setting /></el-icon>设置
             </template>
@@ -63,8 +132,8 @@ const isCollapse=ref(true)
       <el-header style="display: flex;justify-content: space-between; font-size: 12px">
         <div class="toolbar">
             <el-button icon="menu" circle></el-button>
+            <el-text></el-text>
         </div>
-
         <div class="toolbar">
 
           <el-dropdown>
@@ -84,13 +153,14 @@ const isCollapse=ref(true)
       </el-header>
 
       <el-main>
-        <el-scrollbar>
-          <el-table :data="tableData">
-            <el-table-column prop="date" label="Date" width="140" />
-            <el-table-column prop="name" label="Name" width="120" />
-            <el-table-column prop="address" label="Address" />
-          </el-table>
-        </el-scrollbar>
+<!--        <el-scrollbar>-->
+<!--          <el-table :data="tableData">-->
+<!--            <el-table-column prop="date" label="Date" width="140" />-->
+<!--            <el-table-column prop="name" label="Name" width="120" />-->
+<!--            <el-table-column prop="address" label="Address" />-->
+<!--          </el-table>-->
+<!--        </el-scrollbar>-->
+        <router-view ref="router_view" :fileLists="fileLists" @loadfilenames="loadFileNames" @filedelete="handleDeleteFile" @fileupload="handleFileUpload"></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -119,6 +189,7 @@ padding-top: 20px;
   height:100%;
   width: 100%;
   padding:0 0 0 0;
+
   margin: 0 0 0 0;
 }
 
