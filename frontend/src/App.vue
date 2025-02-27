@@ -84,11 +84,16 @@ const loadallMatx = async () => {
   }
   // loading.value = false;
 };
+const drawer=ref(false)
+const view_width=ref(false)
+
 </script>
 
 <template>
 
+
     <el-container class="layout-container-demo" style="height: 100%;">
+
     <el-aside width="200px">
       <el-image style="width: 100%;height: 50px"></el-image>
       <div>
@@ -127,11 +132,51 @@ const loadallMatx = async () => {
       </el-scrollbar>
       </div>
     </el-aside>
+<el-drawer direction="ltr"
+ size="200px" v-model="drawer" :modal="true" :show-close="false" append-to-body style="box-shadow: none;padding: 0" :close-on-click-modal="true" :close-on-press-escape="true">
 
+   <el-image style="width: 100%;height: 50px"></el-image>
+      <div>
+        <el-scrollbar>
+        <el-menu  :router="true" :unique-opened="true" default-active="solver">
+          <el-menu-item index="solver">
+            <template #title>
+              <el-icon><circle-plus/></el-icon>问题求解
+            </template>
+          </el-menu-item>
+          <el-menu-item index="matrixview">
+            <template #title>
+              <el-icon><grid/></el-icon>矩阵数据
+            </template>
+          </el-menu-item>
+          <el-menu-item index="fileManage" >
+            <template #title>
+              <el-icon><upload/></el-icon>文件管理
+            </template>
+          </el-menu-item>
+          <el-menu-item index="history">
+            <template #title>
+              <el-icon><files/></el-icon>历史记录
+            </template>
+<!--          <el-menu-item route="upload" index="upload">问题1</el-menu-item>-->
+<!--          <el-menu-item >问题2</el-menu-item>-->
+<!--          <el-menu-item >问题3</el-menu-item>-->
+<!--          <el-menu-item >问题4</el-menu-item>-->
+          </el-menu-item>
+          <el-menu-item  index="setting" class="menu_setting">
+                      <template #title>
+              <el-icon><setting /></el-icon>设置
+            </template>
+          </el-menu-item>
+        </el-menu>
+      </el-scrollbar>
+      </div>
+
+</el-drawer>
     <el-container>
       <el-header style="display: flex;justify-content: space-between; font-size: 12px">
         <div class="toolbar">
-            <el-button icon="menu" circle></el-button>
+            <el-button icon="menu" circle @click="drawer=!drawer"></el-button>
             <el-text></el-text>
         </div>
         <div class="toolbar">
