@@ -137,15 +137,26 @@ const clickItem = (id) => {
   //width: 100%;
   //min-width: 500px;
   //min-height: 500px;
-  height: 100%;
+  min-height: 40vmax;
   border: 1px solid #ccc;
   background-color: #f0f0f0;
   overflow: hidden;
+  margin-right: 10px;
+  padding-bottom: 10px;
+}
+@media screen and (max-width: 576px) {
+   .graph {
 
+
+     justify-content: center;
+  }
 }
 .graph{
     padding-left: 10px;
+
   width: 100%;
+
+
 }
 
 .header_view {

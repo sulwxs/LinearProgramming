@@ -10,9 +10,10 @@
         </template>
         <el-tab-pane key="overview"
                      label="全部矩阵"
-                     name="overview">
+                     name="overview" style="height: 100%">
 
-          <GraphList style="height:80vh" :filenames="fileLists" @item_click="openTab">
+          <el-scrollbar>
+                 <GraphList  style="height: inherit;" :filenames="fileLists" @item_click="openTab">
             <template #header>
               <el-row style="height: 100%;padding: 0 8px 0 8px;" type="flex" justify="start" align="middle">
                 <el-popover :visible="show_selected_table" placement="bottom" :width="320">
@@ -37,6 +38,8 @@
               </el-row>
             </template>
           </GraphList>
+          </el-scrollbar>
+
 
         </el-tab-pane>
         <el-tab-pane

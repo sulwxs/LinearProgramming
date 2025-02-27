@@ -94,7 +94,7 @@ const view_width=ref(false)
 
     <el-container class="layout-container-demo" style="height: 100%;">
 
-    <el-aside width="200px">
+    <el-aside width="200px" class="hidden-xs-only">
       <el-image style="width: 100%;height: 50px"></el-image>
       <div>
         <el-scrollbar>
@@ -132,7 +132,7 @@ const view_width=ref(false)
       </el-scrollbar>
       </div>
     </el-aside>
-<el-drawer direction="ltr"
+<el-drawer direction="ltr" class="hidden-sm-and-up"
  size="200px" v-model="drawer" :modal="true" :show-close="false" append-to-body style="box-shadow: none;padding: 0" :close-on-click-modal="true" :close-on-press-escape="true">
 
    <el-image style="width: 100%;height: 50px"></el-image>
@@ -174,9 +174,9 @@ const view_width=ref(false)
 
 </el-drawer>
     <el-container>
-      <el-header style="display: flex;justify-content: space-between; font-size: 12px">
+      <el-header style="display: flex;justify-content: space-between; font-size: 12px" >
         <div class="toolbar">
-            <el-button icon="menu" circle @click="drawer=!drawer"></el-button>
+            <el-button icon="menu" circle @click="drawer=!drawer" class="hidden-sm-and-up"></el-button>
             <el-text></el-text>
         </div>
         <div class="toolbar">
