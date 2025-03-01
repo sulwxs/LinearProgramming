@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "@univerjs/presets": "^0.6.1"
+    "@univerjs/core": "^0.6.1",
+    "@univerjs/presets": "^0.6.1",
+    "@univerjs/sheets": "^0.6.1",
+    "@univerjs/sheets-ui": "^0.6.1",
+    "@univerjs/ui": "^0.6.1"
   }
 }
