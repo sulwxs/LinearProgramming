@@ -47,7 +47,8 @@
             :key="item.name"
             :label="item.name"
             :name="item.name">
-            <ExcelTable :matData="props.fileLists.find(i=>i.name===item.name).mat"></ExcelTable>
+<!--            <ExcelTable :matData="props.fileLists.find(i=>i.name===item.name).mat"></ExcelTable>-->
+            <MatrixTable :file="props.fileLists.find(i=>i.name===item.name)" ></MatrixTable>
 
         </el-tab-pane>
       </el-tabs>

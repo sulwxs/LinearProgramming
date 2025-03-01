@@ -2,7 +2,7 @@
 import {ref} from "vue";
 import LinearProgrammingForm from './components/LinearProgrammingForm.vue'
 
-import MatrixView from "@/components/MatrixView.vue";
+import MatrixView from "@/components/desperated/MatrixView.vue";
 import test from "@/components/test.vue";
 import MatrixTable from "@/components/MatrixTable.vue";
 import {CirclePlus, Document, Files, Grid, Setting, Star, UploadFilled} from "@element-plus/icons-vue";
@@ -85,15 +85,15 @@ const loadallMatx = async () => {
   // loading.value = false;
 };
 const drawer=ref(false)
-const view_width=ref(false)
 
 </script>
 
 <template>
 
 
-    <el-container class="layout-container-demo" style="height: 100%;">
 
+
+    <el-container class="layout-container-demo" style="height: 100%;">
     <el-aside width="200px" class="hidden-xs-only">
       <el-image style="width: 100%;height: 50px"></el-image>
       <div>
@@ -194,18 +194,14 @@ const view_width=ref(false)
             </template>
           </el-dropdown>
           <span>Tom</span>
+
+
         </div>
       </el-header>
 
       <el-main>
-<!--        <el-scrollbar>-->
-<!--          <el-table :data="tableData">-->
-<!--            <el-table-column prop="date" label="Date" width="140" />-->
-<!--            <el-table-column prop="name" label="Name" width="120" />-->
-<!--            <el-table-column prop="address" label="Address" />-->
-<!--          </el-table>-->
-<!--        </el-scrollbar>-->
-        <router-view ref="router_view" :fileLists="fileLists" @loadfilenames="loadFileNames" @filedelete="handleDeleteFile" @fileupload="handleFileUpload"></router-view>
+
+        <router-view ref="router_view"  :fileLists="fileLists" @create_matrix="onNewfile" @loadfilenames="loadFileNames" @filedelete="handleDeleteFile" @fileupload="handleFileUpload"></router-view>
       </el-main>
     </el-container>
   </el-container>

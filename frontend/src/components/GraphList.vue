@@ -61,11 +61,7 @@ const props = defineProps({
 })
 const emits = defineEmits(['item_click'])
 
-const testelements = ref([
-  {id: 1, text: '元素 1', top: 100, left: 100},
-  {id: 2, text: '元素 2', top: 200, left: 200},
-  {id: 3, text: '元素 3', top: 300, left: 300}
-]);
+
 const dragging = ref(false);
 const currentElementIndex = ref(-1);
 const offsetX = ref(0);
