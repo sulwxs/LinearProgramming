@@ -1,7 +1,4 @@
 <template>
-  <el-button plain @click="dialogVisible = true">
-    Open the fullscreen Dialog
-  </el-button>
   <el-dialog
     v-model="dialogVisible"
     fullscreen
@@ -20,7 +17,43 @@
       </div>
     </template>
   </el-dialog>
-  <el-card class="overview">
+
+
+  <el-tabs class="demo-tabs" >
+
+<el-tab-pane label="问题描述" name="problem">
+      <el-form>
+        <!-- 输入目标函数 -->
+        <el-form-item label="目标函数">
+          <el-input v-model="objectiveFunction" placeholder="例如：$$f(x) = x^2 + y^2$$"></el-input>
+        </el-form-item>
+
+        <!-- 输入约束条件 -->
+        <el-form-item label="约束条件">
+          <el-input v-model="constraints" placeholder="例如：$$x + y = 10$$"></el-input>
+        </el-form-item>
+
+        <!-- 输入决策变量 -->
+        <el-form-item label="决策变量">
+          <el-input v-model="decisionVariables" placeholder="例如：$$x, y$$"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <!-- 渲染公式 -->
+      <div>
+        <h5>目标函数：</h5>
+        <div v-html="renderedObjective"></div>
+
+        <h5>约束条件：</h5>
+        <div v-html="renderedConstraints"></div>
+
+        <h5>决策变量：</h5>
+        <div v-html="renderedVariables"></div>
+      </div>
+    </el-tab-pane>
+
+    <el-tab-pane label="输入数据" name="datainput">
+        <el-card class="overview">
 
     <template #header>
       <div class="card-header">
@@ -138,12 +171,20 @@
       </div>
     </div>
   </el-card>
+    </el-tab-pane>
+
+  </el-tabs>
+
+
+
+
+
 
 
 </template>
 
 <script setup>
-import {ref, defineEmits, defineProps} from 'vue'
+import {ref, defineEmits, defineProps,watch} from 'vue'
 import axios from "axios";
 import {toRaw} from "vue";
 import katex from 'katex'
@@ -172,6 +213,42 @@ const matA = ref(null)
 const matB = ref(null)
 const file_temp=ref(null)
 
+
+//响应式变量
+const objectiveFunction = ref('');
+const constraints = ref('');
+const decisionVariables = ref('');
+
+const renderedObjective = ref('');
+const renderedConstraints = ref('');
+const renderedVariables = ref('');
+
+// 监听目标函数输入变化
+watch(objectiveFunction, (newFormula) => {
+  try {
+    renderedObjective.value = katex.renderToString(newFormula, { throwOnError: false });
+  } catch (e) {
+    renderedObjective.value = `<span style="color: red;">公式渲染失败</span>`;
+  }
+});
+
+// 监听约束条件输入变化
+watch(constraints, (newFormula) => {
+  try {
+    renderedConstraints.value = katex.renderToString(newFormula, { throwOnError: false });
+  } catch (e) {
+    renderedConstraints.value = `<span style="color: red;">公式渲染失败</span>`;
+  }
+});
+
+// 监听决策变量输入变化
+watch(decisionVariables, (newFormula) => {
+  try {
+    renderedVariables.value = katex.renderToString(newFormula, { throwOnError: false });
+  } catch (e) {
+    renderedVariables.value = `<span style="color: red;">公式渲染失败</span>`;
+  }
+});
 const nextStep = () => {
   if (step.value >= 4)
     return;
@@ -366,7 +443,7 @@ const openresult=()=>
 
 <style scoped>
 .overview {
-  margin-top: 36px;
+  margin-top: 10px;
   height: calc(100vh - 120px);
 }
 </style>

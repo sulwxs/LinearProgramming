@@ -1,23 +1,279 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=0">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优化求解器 | 智能进化计算平台</title>
+    <style>
+        :root {
+            --primary: #6366f1;    /* 现代紫色 */
+            --secondary: #10b981;  /* 翡翠绿 */
+            --accent: #f59e0b;     /* 琥珀色 */
+            --glass: rgba(255, 255, 255, 0.85);
+        }
 
-    <meta name="viewport">
-    <title>Home</title>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 0%, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* 动态渐变导航栏 */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            padding: 1.2rem 5vw;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .login-btn {
+            padding: 0.8rem 1.8rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
+        }
+
+        /* 主体内容增强 */
+        .hero {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 12rem 5vw 6rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            background: linear-gradient(45deg, #2d3436 30%, #4a5568 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 2rem;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .description {
+            font-size: 1.25rem;
+            color: #4a5568;
+            max-width: 680px;
+            margin: 0 auto 4rem;
+            opacity: 0.9;
+            animation: fadeIn 1s 0.3s both;
+        }
+
+        /* CTA按钮升级 */
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
+        }
+
+        /* 功能亮点 */
+        .features {
+            max-width: 1200px;
+            margin: 6rem auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            position: relative;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transform: rotate(30deg);
+            pointer-events: none;
+        }
+
+        .feature-card:hover::before {
+            animation: shine 1.5s;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .feature-card h3::before {
+            content: '✓';
+            color: var(--secondary);
+            font-weight: 700;
+            filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3));
+        }
+
+        .feature-card p {
+            color: #4a5568;
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero {
+                padding: 8rem 2rem 4rem;
+            }
+
+            .cta-btn {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="brand">OptiSolver</div>
+        <a href="#login" class="login-btn">Login</a>
+    </nav>
 
-    <div id="app"></div>
-    <script type="module" src="/home/src/main.js"></script>
-<style>
-    body{
-        padding: 0px;
-        margin: 0px;
-    }
-</style>
+    <!-- 新增间距容器 -->
+    <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center;">
+        <div class="hero" style="padding-top: 8rem; padding-bottom: 4rem;">
+            <h1>欢迎使用最优化问题求解器</h1>
+            <p class="description">
+                平台致力于为用户提供全面、高效的最优化解决方案。
+            </p>
+            <a href="/" class="cta-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20M2 12h20"/>
+                </svg>
+                立即开始
+            </a>
+        </div>
 
+        <div class="features" style="margin-top: 4rem;">
+            <div class="feature-card">
+                <h3>线性优化</h3>
+
+            </div>
+            <div class="feature-card">
+                <h3>其他优化</h3>
+
+            </div>
+        </div>
+    </div>
+
+   <!--  <script type="module" src="/home/src/main.js"></script>-->
 </body>
 </html>
