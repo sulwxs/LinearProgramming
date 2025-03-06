@@ -20,7 +20,7 @@
     <el-menu-item index="0">
     <img
         style="width: 60px;"
-        src="./assets/logo.svg"
+        src="assets/logo.svg"
         alt="Element logo"
       />
     </el-menu-item>
