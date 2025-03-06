@@ -1,7 +1,6 @@
 <script setup>
 import {ref} from "vue";
 import LinearProgrammingForm from './components/LinearProgrammingForm.vue'
-
 import MatrixView from "@/components/desperated/MatrixView.vue";
 import test from "@/components/test.vue";
 import MatrixTable from "@/components/MatrixTable.vue";
