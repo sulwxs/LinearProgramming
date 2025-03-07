@@ -15,7 +15,7 @@ const pages = [
   { name: "register", htmlName: "register.html", htmlPath: "./src/pages/login/" },
   { name: "forgot", htmlName: "forgot.html", htmlPath: "./src/pages/login/" },
   { name: "home", htmlName: "index.html", htmlPath: "./src/pages/home/" },
-  { name: "about", htmlName: "index.html", htmlPath: "./src/pages/about/" },
+  { name: "about", htmlName: "about.html", htmlPath: "./src/pages/about/" },
 ];
 
 // pages.forEach((page) => {
