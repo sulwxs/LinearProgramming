@@ -113,9 +113,9 @@ const drawer=ref(false)
               <el-icon><upload/></el-icon>文件管理
             </template>
           </el-menu-item>
-          <el-menu-item index="history">
+          <el-menu-item index="projects">
             <template #title>
-              <el-icon><files/></el-icon>历史记录
+              <el-icon><files/></el-icon>项目管理
             </template>
 <!--          <el-menu-item route="upload" index="upload">问题1</el-menu-item>-->
 <!--          <el-menu-item >问题2</el-menu-item>-->
