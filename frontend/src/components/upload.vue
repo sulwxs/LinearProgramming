@@ -34,7 +34,18 @@
       <el-table v-loading="loading"  :data="fileList" style="width: 100%">
         <el-table-column prop="name" label="文件名" align="center">
           <template #default="{ row }">
-            {{row.name}}
+            <div @dblclick="row.edit=!row.edit">
+                          <span v-show="!row.edit">{{row.alias}}</span>
+          <el-input
+             :autofocus="true"
+            v-show="row.edit"
+            v-model="row.alias"
+            @focusout="row.edit=false"
+            style="max-width: 250px"
+          ></el-input>
+            </div>
+
+
           </template>
         </el-table-column>
         <el-table-column prop="status" label="上传状态" align="center">
@@ -57,13 +68,34 @@
         </el-table-column>
         <el-table-column label="操作"  align="center">
           <template #default="{ row }">
-            <el-button
-              @click="deleteFile(row.name)"
-              size="small"
-              type="danger"
-            >
-              删除
-            </el-button>
+<!--            <el-button-->
+<!--              @click="deleteFile(row.name)"-->
+<!--              size="small"-->
+<!--              type="danger"-->
+<!--            >-->
+<!--              删除-->
+<!--            </el-button>-->
+  <el-dropdown @command="(e)=>handleFileAct(e,row)">
+    <span class="el-dropdown-link">
+      操作
+      <el-icon class="el-icon--right">
+        <ArrowDown/>
+      </el-icon>
+    </span>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item command="重命名">重命名</el-dropdown-item>
+        <el-dropdown-item command="复制">复制</el-dropdown-item>
+        <el-dropdown-item command="下载">下载</el-dropdown-item>
+        <el-dropdown-item command="删除">删除</el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+
+
+
+
+
           </template>
         </el-table-column>
       </el-table>
@@ -85,8 +117,18 @@
 
 import { ref ,defineEmits,defineProps} from 'vue';
 import axios from 'axios';
-import { ElUpload, ElButton, ElTable, ElTableColumn, ElProgress, ElDescriptions, ElDescriptionsItem, ElMessage } from 'element-plus';
-import {CircleCheckFilled, Rank, CircleCloseFilled} from '@element-plus/icons-vue';
+import {
+  ElUpload,
+  ElButton,
+  ElTable,
+  ElTableColumn,
+  ElProgress,
+  ElDescriptions,
+  ElDescriptionsItem,
+  ElMessage,
+  ElMessageBox
+} from 'element-plus';
+import {CircleCheckFilled, Rank, CircleCloseFilled, ArrowDown} from '@element-plus/icons-vue';
 
 // export default {
   // emits:['loadfilenames'],
@@ -107,6 +149,7 @@ import {CircleCheckFilled, Rank, CircleCloseFilled} from '@element-plus/icons-vu
     const loading=ref(true);
     const overallProgress = ref(0);
     const emits = defineEmits(['loadfilenames','fileupload','filedelete']);
+
 
 
 
@@ -165,15 +208,43 @@ import {CircleCheckFilled, Rank, CircleCloseFilled} from '@element-plus/icons-vu
       }
       return isAllowedType;
     };
+   const handleFileAct =(e,file)=>{
+     const name=file.name
+     console.log(file)
+  switch (e){
+   case '删除':
+    deleteFile(file)
+     break
+    case '复制':
+    copyFile(file)
+     break
+    case '重命名':
+    renameFile(file,name)
+     break
+        case '下载':
+        downloadFile(file)
+     break
+  }
+}
 
     // 删除文件
-    const deleteFile = async (filename) => {
+    const deleteFile = async (file) => {
+               ElMessageBox.confirm(
+    '确定要删除文件 '+file.alias+' ?',
+    'Warning',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/delete?filename=${filename}`);
+        const response = await axios.get(`http://127.0.0.1:5000/delete?filename=${file.name}`);
         if (response.data.success) {
-          fileList.value = fileList.value.filter((file) => file.name !== filename);
-          emits('filedelete',filename)
-          ElMessage.success(`文件 "${filename}" 删除成功`);
+          fileList.value = fileList.value.filter((f) => f.name !== file.name);
+          emits('filedelete', file.name)
+          ElMessage.success(`文件 "${file.alias}" 删除成功`);
         } else {
           ElMessage.error('删除失败');
         }
@@ -181,7 +252,89 @@ import {CircleCheckFilled, Rank, CircleCloseFilled} from '@element-plus/icons-vu
         console.error('删除文件时发生错误', error);
         ElMessage.error('删除失败');
       }
+    })
+    .catch(() => {
+      return
+    })
+
+
     };
+const renameFile = async (file,alias) => {
+
+
+  ElMessageBox.prompt('输入文件名', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    inputPattern:
+        /^[\u4e00-\u9fa5\w\s.-]+$/,
+    inputErrorMessage: '无效文件名',
+  })
+      .then(async ({value}) => {
+        try {
+          const response = await axios.get(`http://127.0.0.1:5000/rename?filename=${file.name}&alias=${value}`);
+          if (response.data.success) {
+            file.alias = alias
+            emits('rename', file.alias)
+            ElMessage.success(`文件 "${file.alias}" 重命名成功`);
+          } else {
+            ElMessage.error('重命名失败');
+          }
+        } catch (error) {
+          console.error('发生错误', error);
+          ElMessage.error('重命名失败');
+        }
+
+      })
+      .catch(() => {
+
+      })
+};
+
+
+
+
+const copyFile = async (file) => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:5000/copy?filename=${file.name}`);
+        if (response.data.success) {
+          const new_f=response.data.file
+          fileList.value.push(new_f);
+
+          emits('copyfile',file.name)
+          ElMessage.success(`文件 "${file.name}" 复制成功`);
+        } else {
+          ElMessage.error('复制失败');
+        }
+      } catch (error) {
+        console.error('发生错误', error);
+        ElMessage.error('复制失败');
+      }
+    };
+const downloadFile = async (file) => {
+      try {
+
+        const response = await axios.get(`http://127.0.0.1:5000/download?filename=${file.name}`);
+        console.log(file)
+         const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', file.alias?file.alias:file.name);
+        document.body.appendChild(link);
+        link.click();
+
+        // if (response.data.success) {
+        //   fileList.value = fileList.value.filter((file) => file.name !== filename);
+        //   emits('download',filename)
+        //   ElMessage.success(`文件 "${filename}" 开始下载`);
+        // } else {
+        //   ElMessage.error('无法下载');
+        // }
+      } catch (error) {
+        console.error('发生错误', error);
+        ElMessage.error('无法下载');
+      }
+    };
+
 
         // 加载已有文件列表
     const loadFileList = async () => {
