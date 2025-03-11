@@ -30,9 +30,7 @@
       <el-text v-if="project.description" type="info" class="description">
         {{ project.description }}
       </el-text>
-      <el-text type="info" class="create-time">
-        创建时间：{{ formatTime(project.createdAt) }}
-      </el-text>
+      
     </div>
 
     <!-- 问题管理 -->
@@ -106,7 +104,9 @@
         <el-form-item label="问题描述" required>
           <el-input v-model="issueDialog.form.description" />
         </el-form-item>
-        
+        <el-form-item label="ID" required>
+          <el-input v-model="issueDialog.form.id" />
+        </el-form-item>
         <el-form-item label="优先级">
           <el-rate 
             v-model="issueDialog.form.priority"
@@ -197,6 +197,7 @@ const issueDialog = reactive({
   mode: 'create',
   form: {
     description: '',
+    ID: '',
     priority: 1,
     resolved: false
   }
@@ -205,32 +206,51 @@ const issueDialog = reactive({
 const showIssueDialog = (mode, row) => {
   issueDialog.mode = mode
   if (mode === 'edit') {
-    issueDialog.form = { ...row }
+    issueDialog.form = { 
+      id: row.id,
+      description: row.description,
+      priority: row.priority,
+      resolved: row.resolved,
+      createdAt: row.createdAt
+    }
   } else {
     issueDialog.form = {
+      id: Date.now(), // 默认生成时间戳ID
       description: '',
       priority: 1,
-      resolved: false
+      resolved: false,
+      createdAt: new Date().toISOString()
     }
   }
   issueDialog.visible = true
 }
 
 const handleIssueSubmit = () => {
-  if (!issueDialog.form.description.trim()) {
-    ElMessage.error('请输入问题描述')
+  const issueId = Number(issueDialog.form.id)
+  if (isNaN(issueId)) {
+    ElMessage.error('ID必须是有效数字')
     return
   }
 
+  // 创建模式检查ID唯一性
+  if (issueDialog.mode === 'create') {
+    const exists = props.project.issues.some(i => i.id === issueId)
+    if (exists) {
+      ElMessage.error(`ID ${issueId} 已存在，请使用唯一标识`)
+      return
+    }
+  }
+
+  // 更新数据逻辑
   const updatedProject = { ...props.project }
   if (issueDialog.mode === 'create') {
     updatedProject.issues.push({
       ...issueDialog.form,
-      id: Date.now(),
+      id: issueId,  // 使用用户输入的ID
       createdAt: new Date().toISOString()
     })
   } else {
-    const index = updatedProject.issues.findIndex(i => i.id === issueDialog.form.id)
+    const index = updatedProject.issues.findIndex(i => i.id === issueId)
     if (index > -1) {
       updatedProject.issues[index] = {
         ...updatedProject.issues[index],
@@ -297,7 +317,7 @@ const downloadFile = (file) => {
 
 // 工具函数
 const formatTime = (time) => {
-  return new Date(time).toLocaleString()
+  return new Date(time).toLocaleString() // 确保传入的是有效时间戳或ISO字符串
 }
 
 const priorityType = computed(() => (priority) => {
