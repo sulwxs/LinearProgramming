@@ -5,6 +5,15 @@
       <el-button type="primary" @click="handleEdit" :icon="Edit" circle />
       <el-button type="danger" @click="confirmDelete" :icon="Delete" circle />
       <el-button type="info" @click="$emit('back')" :icon="Back" circle />
+      <el-button 
+        type="info" 
+        @click="$emit('back')" 
+        :icon="Back"
+        class="text-button"
+        style="margin-left: auto;"
+      >
+        返回列表
+      </el-button>   
     </div>
 
     <!-- 项目信息编辑区 -->
@@ -99,7 +108,7 @@
     </el-table>
 
     <!-- 问题编辑对话框 -->
-    <el-dialog v-model="issueDialog.visible" :title="`${issueDialog.mode === 'create' ? '新建' : '编辑'}问题`">
+    <el-dialog v-model="issueDialog.visible" :title="`${issueDialog.mode === 'create' ? '新建' : '编辑'}问题描述`">
       <el-form :model="issueDialog.form">
         <el-form-item label="问题描述" required>
           <el-input v-model="issueDialog.form.description" />
@@ -330,6 +339,26 @@ const priorityType = computed(() => (priority) => {
 </script>
 
 <style scoped>
+.text-button {
+  margin-left: auto;
+  border-radius: 6px;
+  padding: 8px 20px;
+  background: linear-gradient(145deg, #409EFF, #79BBFF) !important;
+  border-color: #409EFF !important;
+  color: white !important;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(64,158,255,0.2);
+}
+
+.text-button:hover {
+  background: linear-gradient(145deg, #79BBFF, #409EFF) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(64,158,255,0.3);
+}
+
+.text-button:active {
+  transform: translateY(0);
+}
 .project-detail {
   margin: 20px;
   padding: 24px;
