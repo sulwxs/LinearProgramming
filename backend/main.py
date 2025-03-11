@@ -15,6 +15,8 @@ app = Flask(__name__)
 CORS(app)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.mkdir(app.config['UPLOAD_FOLDER'])
 ALLOWED_EXTENSIONS = {'txt', 'csv'}
 matrixs={}
 filelists:DataFrame=None
