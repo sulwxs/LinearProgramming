@@ -1,6 +1,6 @@
 <template>  <!-- 快速开始 -->
   <el-divider>快速开始</el-divider>
-  <el-row :gutter="20">
+  <el-row :gutter="20" style="padding-left: 10px">
     <el-col v-for="example in quickStartExamples" :key="example.id" :span="4">
       <el-card class="quick-start-card" shadow="hover" @click="startQuickProject(example)">
         <h3 class="quick-start-title">{{ example.name }}</h3>
@@ -9,13 +9,13 @@
     </el-col>
   </el-row>
 
-  <el-row style="margin-bottom: 10px">
+  <el-row style="margin-bottom: 20px;padding-left: 10px">
      <el-button class="gradient-button" @click="addNewProject" >+ 创建新项目</el-button>
      <el-button class="gradient-button" @click="addNewProject" >多选</el-button>
   </el-row>
 
 
-  <el-row :gutter="20">
+  <el-row :gutter="20" style="padding-left: 10px">
     <el-col v-for="project in projects" :key="project.id" :span="4" :gutter="20">
       <el-card class="project-card" shadow="hover" @click="viewProject(project)">
         <h3 class="project-title">{{ project.name }}</h3>

@@ -17,11 +17,13 @@
           :projects="projects"
           @selectProject="selectProject"
           @createProject="createProject"
+
         />
         <ProjectDetail 
           v-else 
           :project="selectedProject" 
-          @back="selectedProject = null" 
+          @back="selectedProject = null"
+
         />
       </div>
     </el-main>
